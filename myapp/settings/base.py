@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp.home',
     'myapp.user'
+    'challenge_calendar',
 ]
 
 MIDDLEWARE = [
