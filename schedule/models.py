@@ -9,10 +9,12 @@ class Schedule(models.Model):
     end_date_time = models.DateTimeField()
     is_all_day = models.BooleanField()
 
+    def __str__(self):
+        return self.title
+
 
 class Invitation(models.Model):
     name = models.CharField(max_length=30)
     e_mail = models.EmailField()
     is_accepted = models.BooleanField(default=False)
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, blank=True, null=True, related_name='invitations')
-
