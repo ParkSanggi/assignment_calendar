@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'myapp.home',
     'myapp.user',
     'schedule',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'myapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'layout')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

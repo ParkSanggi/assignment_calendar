@@ -8,9 +8,10 @@ DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
-        'NAME': 'my_database',
-        'USER': 'root',
-        'PASSWORD': '',
+        'HOST': 'calendar.cju6s7rtvsvl.ap-northeast-2.rds.amazonaws.com',
+        'NAME': 'roqkfwkehlwk',
+        'USER': 'roqkfwkehlwk',
+        'PASSWORD': 'password44',
+        'PORT': '3306',
     }
 }
