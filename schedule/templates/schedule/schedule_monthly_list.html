@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load schedule_extras %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="calendar-header">
+        <button class="btn btn-light">Today</button>
+        <div class="ico-arrow">
+            <a href="{% url 'schedule:monthly' today|convert_pre_year today|convert_pre_month today.2 %}"
+               data-toggle="tooltip" data-placement="top" title="이전">
+                <i class="material-icons">
+                    chevron_left
+                </i>
+            </a>
+            <a href="{% url 'schedule:monthly' today|convert_next_year today|convert_next_month today.2 %}"
+               data-toggle="tooltip" data-placement="top" title="다음">
+                <i class="material-icons">
+                    chevron_right
+                </i>
+            </a>
+        </div>
+        <h4>{{ today.0 }}년 {{ today.1 }}월</h4>
+        <ul class="nav nav-tabs view-tab" id="view" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="tab-month" data-toggle="tab" href="#month" role="tab"
+                   aria-controls="month"
+                   aria-selected="true">월</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="tab-day" data-toggle="tab" href="#day" role="tab" aria-controls="day"
+                   aria-selected="false">일</a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active show" id="month" role="tabpanel" aria-labelledby="tab-month">
+            <div class="monthly-calendar">
+                <div class="week-day">
+                    <div class="day-name">일</div>
+                    <div class="day-name">월</div>
+                    <div class="day-name">화</div>
+                    <div class="day-name">수</div>
+                    <div class="day-name">목</div>
+                    <div class="day-name">금</div>
+                    <div class="day-name">토</div>
+                </div>
+
+                {% for week in week_list %}
+                <div class="week">
+                    {% for day in week %}
+                    <div class="day">
+                        <h3 class="day-label">{{ day }}</h3>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        <!--            여기까지가 캘린더-->
+    </div>
+</div>
+{% endblock %}
+
+<!--<div class="event-consecutive event-start event-end" data-span="6"-->
+<!--                             data-toggle="popover" data-html="true" data-content='-->
+<!--                             <div class="content-line">-->
+<!--                                <div class="event-consecutive-marking"></div>-->
+<!--                                <div class="title">-->
+<!--                                    <h5>일정 1</h5>-->
+<!--                                    <h7 class="reservation">2019년 9월 15일 – 17일-->
+<!--                                </div>-->
+<!--                                </div>-->
+<!--                                <div class="content-line"><i class="material-icons">notes</i>-->
+<!--                             <div class="title">-->
+<!--                             <h7 class="reservation">스케쥴 메모, 설명이 나타납니다.</div>'>-->
+<!--                            연속 일정 1-->
+<!--                            </div>-->
