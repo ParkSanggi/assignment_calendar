@@ -9,27 +9,21 @@ from .models import Schedule
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
-        fields = ('title', 'description', 'is_all_day')
+        fields = '__all__'
 
     def to_representation(self, instance):
         serializers_data = super().to_representation(instance)
         week_list = self.context['week_list']
         cur_year = self.context['year']
-        print(cur_year)
         cur_month = self.context['month']
         schedule_length = (instance.end_date_time - instance.start_date_time).days + 1
 
         start_year = instance.start_date_time.year
         start_month = instance.start_date_time.month
         start_day = instance.start_date_time.day
-        start_hour = instance.start_date_time.hour
-        start_minute = instance.start_date_time.minute
 
-        end_year = instance.end_date_time.year
         end_month = instance.end_date_time.month
         end_day = instance.end_date_time.day
-        end_hour = instance.end_date_time.hour
-        end_minute = instance.end_date_time.minute
 
         start_point = 0
 
@@ -66,8 +60,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
         length_to_apply = remaining_spaces
         temp_schedule_length = schedule_length
         temp_start_point = start_point
-        print(schedule_length)
-        print(start_point)
+
         while True:
 
             if temp_schedule_length > remaining_spaces:
