@@ -2,6 +2,7 @@
 {% load schedule_extras %}
 
 {% block content %}
+
 <div class="calendar-container">
     <div class="calendar-header">
         <button class="btn btn-light">Today</button>
@@ -45,11 +46,12 @@
                     <div class="day-name">토</div>
                 </div>
 
+
                 {% for week in week_list %}
                 <div class="week">
                     {% for day in week %}
                     <div class="day">
-                        <h3 class="day-label">{{ day }}</h3>
+                        <h3 class="day-label">{{ day.1 }}</h3>
                     </div>
                     {% endfor %}
                 </div>
@@ -60,19 +62,176 @@
         <!--            여기까지가 캘린더-->
     </div>
 </div>
-{% endblock %}
 
-<!--<div class="event-consecutive event-start event-end" data-span="6"-->
-<!--                             data-toggle="popover" data-html="true" data-content='-->
-<!--                             <div class="content-line">-->
-<!--                                <div class="event-consecutive-marking"></div>-->
-<!--                                <div class="title">-->
-<!--                                    <h5>일정 1</h5>-->
-<!--                                    <h7 class="reservation">2019년 9월 15일 – 17일-->
-<!--                                </div>-->
-<!--                                </div>-->
-<!--                                <div class="content-line"><i class="material-icons">notes</i>-->
-<!--                             <div class="title">-->
-<!--                             <h7 class="reservation">스케쥴 메모, 설명이 나타납니다.</div>'>-->
-<!--                            연속 일정 1-->
-<!--                            </div>-->
+<!--여기서부터 modal-->
+<div class="modal fade" id="registerSchedule" tabindex="-1" role="dialog" aria-labelledby="registerScheduleLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerScheduleLabel">일정 만들기</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'schedule:create_schedule' %}" method="POST">
+                    <div class="form-group">
+                        <label class="col-form-label">일정 제목</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">일정 설명</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">일정 시작 날짜</label>
+                                <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                           data-target="#datetimepicker1"/>
+                                    <div class="input-group-append" data-target="#datetimepicker1"
+                                         data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="material-icons">
+                                            calendar_today
+                                        </i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">일정 시작 시간</label>
+                                <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                           data-target="#datetimepicker2"/>
+                                    <div class="input-group-append" data-target="#datetimepicker2"
+                                         data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="material-icons">
+                                            access_time
+                                        </i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">일정 종료 날짜</label>
+                                <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                           data-target="#datetimepicker3"/>
+                                    <div class="input-group-append" data-target="#datetimepicker3"
+                                         data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="material-icons">
+                                            calendar_today
+                                        </i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">일정 종료 시간</label>
+                                <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                           data-target="#datetimepicker4"/>
+                                    <div class="input-group-append" data-target="#datetimepicker4"
+                                         data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="material-icons">
+                                            access_time
+                                        </i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="unchecked">
+                            <label class="form-check-label" for="inlineCheckbox1">매월 반복</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="unchecked">
+                            <label class="form-check-label" for="inlineCheckbox2">하루 종일</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary submit">일정 만들기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+csrf_token = "{{ csrf_token }}"
+schedules = {{ monthly_schedule|safe }}
+week_list =  {{ week_list }}
+year = {{ today.0 }}
+month = {{ today.1 }}
+
+$(function(){
+
+    console.log(schedules);
+
+    schedules.forEach(function (schedule){
+
+        for(i in schedule['schedule_bars']){
+            var $scheduleBar = schedule['schedule_bars'][i];
+
+            $(".day").eq(schedule['start_points'][i]).append($scheduleBar);
+
+        };
+    });
+
+
+    $('#inlineCheckbox1').click(function(){
+        $("#inlineCheckbox1").val() == "unchecked" ? $("#inlineCheckbox1").val("checked") : $("#inlineCheckbox1").val("unchecked");
+    });
+
+    $('#inlineCheckbox2').click(function(){
+        $("#inlineCheckbox1").val() == "unchecked" ? $("#inlineCheckbox1").val("checked") : $("#inlineCheckbox1").val("unchecked");
+    });
+
+
+    $('button.submit').click(function(){
+        alert('123');
+        url = $('form').attr('action');
+
+        console.log({
+        schedule_name: $('#recipient-name').val(),
+                    schedule_description: $('#message-text').val(),
+                    start_date: $('#datetimepicker1').children('input').val(),
+                    start_time: $('#datetimepicker2').children('input').val(),
+                    end_date: $('#datetimepicker3').children('input').val(),
+                    end_time: $('#datetimepicker4').children('input').val(),
+                    monthly_repeat: $('#inlineCheckbox1').val(),
+                    is_all_day: $('#inlineCheckbox2').val(),
+        });
+
+        $.ajax({
+            url: url,
+            method : 'POST',
+            data : {csrfmiddlewaretoken: csrf_token,
+                    schedule_name: $('#recipient-name').val(),
+                    schedule_description: $('#message-text').val(),
+                    start_date: $('#datetimepicker1').children('input').val(),
+                    start_time: $('#datetimepicker2').children('input').val(),
+                    end_date: $('#datetimepicker3').children('input').val(),
+                    end_time: $('#datetimepicker4').children('input').val(),
+                    monthly_repeat: $('#inlineCheckbox1').val(),
+                    is_all_day: $('#inlineCheckbox2').val(),
+                    },
+            success : function(response){
+                $('#registerSchedule').modal("hide")
+                location.reload();
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}
