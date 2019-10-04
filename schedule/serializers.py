@@ -31,7 +31,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
             cur_month = 13
             cur_year -= 1
 
-        if start_month < cur_month and start_day < week_list[0][0][1]:
+        if start_month < cur_month and start_day < week_list[0][0][1] :
             schedule_length = (instance.end_date_time - timezone.make_aware(
                 datetime(cur_year, week_list[0][0][0], week_list[0][0][1]))).days + 1
 
@@ -44,6 +44,11 @@ class ScheduleSerializer(serializers.ModelSerializer):
                         start_point += 1
                 if day == [start_month, start_day]:
                     break
+
+        if start_point == 42:
+            start_point = 0
+            schedule_length = (instance.end_date_time - timezone.make_aware(
+                datetime(cur_year, week_list[0][0][0], week_list[0][0][1]))).days + 1
 
         serializers_data['start_points'] = [start_point]
 
