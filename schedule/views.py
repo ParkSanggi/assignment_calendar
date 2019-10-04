@@ -17,12 +17,13 @@ from schedule.serializers import ScheduleSerializer
 from .models import Schedule
 
 
+class MakeDailyListView(APIView):
+    def get(self, *args, **kwargs):
+        pass
+
+
 class CreateScheduleView(APIView):
     def post(self, *args, **kwargs):
-        print(self.request.data)
-
-        # is_all_day = models.BooleanField()
-        # is_repeated = models.BooleanField()
 
         title = self.request.data.get('schedule_name')
         description = self.request.data.get('schedule_description')
@@ -39,17 +40,19 @@ class CreateScheduleView(APIView):
         end_date = [i for i in map(int, self.request.data.get('end_date').split('/'))]
         str_end_time, check_morning = self.request.data.get('end_time').split(' ')
         end_hour, end_minute = map(int, (str_end_time.split(':')))
-        end_hour, end_minute = map(int, (str_start_time.split(':')))
+
+        if check_morning == 'PM':
+            end_hour += 12
 
         end_date_time = timezone.make_aware(
             datetime(end_date[2], end_date[0], end_date[1], end_hour, end_minute))
 
-        if check_morning == 'PM':
-            start_hour += 12
+        is_all_day = True if self.request.data.get('is_all_day') == 'checked' else False
+        monthly_repeat = True if self.request.data.get('monthly_repeat') == 'checked' else False
 
-        schedule_obj = Schedule.objects.create_or_404(title=title, description=description,
-                                                      start_date_time=start_date_time,
-                                                      end_date_time=end_date_time, is_all_day=False, is_repeated=False)
+        schedule_obj = Schedule.objects.create(title=title, description=description, start_date_time=start_date_time,
+                                               end_date_time=end_date_time, is_all_day=is_all_day,
+                                               is_repeated=monthly_repeat)
         return Response({})
 
 
@@ -57,8 +60,6 @@ class MakeMonthly(View):
     def get(self, request, *args, year=datetime.today().year, month=datetime.today().month, day=datetime.today().day):
 
         week_list = self.make_weeks(year, month)
-        print(week_list)
-
         first_day = self.find_first_day_detail(year, month, week_list)
         last_day = self.find_last_day_detail(year, month, week_list)
 
@@ -95,34 +96,34 @@ class MakeMonthly(View):
 
     def make_weeks(self, year, month):
         weeks = [[None for _ in range(7)] for _ in range(6)]
-        month_range = calendar.monthrange(year, month)
-        start_idx = 0 if month_range[0] == 6 else month_range[0] + 1
+        first_day_of_week, last_day = calendar.monthrange(year, month)
+        start_day_of_month_idx = 0 if first_day_of_week == 6 else first_day_of_week + 1
 
         temp_month = month
-        i = start_idx
-        n = 1
-        w = 0
+        temp_idx = start_day_of_month_idx
+        temp_day = 1
+        what_week = 0
 
-        while w != 6:
-            weeks[w][i] = [temp_month, n]
-            i += 1
-            n += 1
-            if n > month_range[1]:
-                n = 1
+        while what_week != 6:
+            weeks[what_week][temp_idx] = [temp_month, temp_day]
+            temp_idx += 1
+            temp_day += 1
+            if temp_day > last_day:
+                temp_day = 1
                 temp_month += 1
-            if i == 7:
-                w += 1
-                i = 0
+            if temp_idx == 7:
+                what_week += 1
+                temp_idx = 0
 
-        if start_idx:
+        if start_day_of_month_idx:
             last_month = 12 if month == 1 else month - 1
             last_month_range = calendar.monthrange(year - 1, last_month) if last_month == 12 else calendar.monthrange(
                 year, last_month)
-            i = start_idx - 1
-            n = last_month_range[1]
+            temp_idx = start_day_of_month_idx - 1
+            temp_day = last_month_range[1]
 
-            while i >= 0:
-                weeks[0][i] = [last_month, n]
-                i -= 1
-                n -= 1
+            while temp_idx >= 0:
+                weeks[0][temp_idx] = [last_month, temp_day]
+                temp_idx -= 1
+                temp_day -= 1
         return weeks
