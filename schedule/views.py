@@ -9,19 +9,32 @@ from rest_framework.response import Response
 import calendar
 from datetime import datetime
 
-from schedule.serializers import ScheduleSerializer
+from schedule.serializers import ScheduleSerializer, DailyScheduleSerializer
 from .models import Schedule
 
 
 class MakeDailyListView(View):
     def get(self, *args, **kwargs):
-        context = {}
+
+        today_year = datetime.today().year
+        today_month = datetime.today().month
+        today_day = datetime.today().day
+
+        today_midnight = timezone.make_aware(datetime(today_year, today_month, today_day, 23, 59, 59))
+
+        if today_day == 1 and today_month == 1:
+            yester_day_midnight = timezone.make_aware(datetime(today_year-1, 12, 31, 23, 59, 59))
+        else:
+            yester_day_midnight = timezone.make_aware(datetime(today_year, today_month, today_day, 23, 59, 59))
+
+        queryset = Schedule.objects.filter(end_date_time__gt=yester_day_midnight, start_date_time__lt=today_midnight)
+        schedules = json.dumps(DailyScheduleSerializer(queryset, many=True).data)
+        context = {'schedules': schedules}
         return render(self.request, 'schedule/schedule_daily.html', context)
 
 
 class CreateScheduleView(APIView):
     def post(self, *args, **kwargs):
-
         title = self.request.data.get('schedule_name')
         description = self.request.data.get('schedule_description')
         start_date_time = self.make_date_time_obj('start')
@@ -35,7 +48,6 @@ class CreateScheduleView(APIView):
         return Response({})
 
     def make_date_time_obj(self, status):
-
         date = [i for i in map(int, self.request.data.get(f'{status}_date').split('/'))]
         str_time, check_morning = self.request.data.get(f'{status}_time').split(' ')
         hour, minute = map(int, (str_time.split(':')))

@@ -27,8 +27,10 @@
                    aria-selected="true">월</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="tab-day" data-toggle="tab" href="#day" role="tab" aria-controls="day"
-                   aria-selected="false">일</a>
+                <form action="/" method="get">
+                    <input type="text">
+                </form>
+
             </li>
         </ul>
     </div>
@@ -40,4 +42,25 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+$(function(){
+alert('');
+schedules = {{ schedules|safe }}
+alert('');
+console.log(schedules);
+
+
+    schedules.forEach(function (schedule){
+
+        for(i in schedule['schedule_bars']){
+            var $scheduleBar = schedule['schedule_bars'][i];
+
+            $(".daily-calendar").append($scheduleBar);
+
+        };
+    });
+
+});
+</script>
 {% endblock %}

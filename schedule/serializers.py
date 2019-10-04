@@ -104,3 +104,39 @@ class ScheduleSerializer(serializers.ModelSerializer):
                 break
 
         return serializers_data
+
+
+class DailyScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        serializers_data = super().to_representation(instance)
+
+        start_year = instance.start_date_time.year
+        start_month = instance.start_date_time.month
+        start_day = instance.start_date_time.day
+
+        end_month = instance.end_date_time.month
+        end_day = instance.end_date_time.day
+
+        schedule_length = (instance.end_date_time - instance.start_date_time).days + 1
+
+        if instance.is_repeated:
+            kind_of_event = 'event-repeated'
+        elif schedule_length >= 2:
+            kind_of_event = 'event-consecutive'
+        else:
+            kind_of_event = ''
+
+        serializers_data['schedule_bars'] = []
+
+        serializers_data['schedule_bars'].append(
+            f"""<div class="event {kind_of_event} event-start event-end" data-toggle="popover" data-html="true"
+             data-content='<div class="content-line"><div class="event-consecutive-marking"></div><div class="title">
+             <h5>{instance.title}</h5><h7 class="reservation">{start_year}년 {start_month}월 {start_day}일 –
+            {end_month}월 {end_day}일</h7></div><div class="content-line"><i class="material-icons">notes</i>
+            <div class="title"><h7 class="reservation">{instance.description}</h7></div></div>'>{instance.title}</div>""")
+
+        return serializers_data
