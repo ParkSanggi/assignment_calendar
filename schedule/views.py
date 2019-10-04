@@ -1,7 +1,3 @@
-import pickle
-
-from django.core.serializers import serialize
-from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
@@ -17,9 +13,10 @@ from schedule.serializers import ScheduleSerializer
 from .models import Schedule
 
 
-class MakeDailyListView(APIView):
+class MakeDailyListView(View):
     def get(self, *args, **kwargs):
-        return Response({})
+        context = {}
+        return render(self.request, 'schedule/schedule_daily.html', context)
 
 
 class CreateScheduleView(APIView):
