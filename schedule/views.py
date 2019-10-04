@@ -19,7 +19,7 @@ from .models import Schedule
 
 class MakeDailyListView(APIView):
     def get(self, *args, **kwargs):
-        pass
+        return Response({})
 
 
 class CreateScheduleView(APIView):
@@ -27,26 +27,8 @@ class CreateScheduleView(APIView):
 
         title = self.request.data.get('schedule_name')
         description = self.request.data.get('schedule_description')
-
-        start_date = [i for i in map(int, self.request.data.get('start_date').split('/'))]
-        str_start_time, check_morning = self.request.data.get('start_time').split(' ')
-        start_hour, start_minute = map(int, (str_start_time.split(':')))
-        if check_morning == 'PM':
-            start_hour += 12
-
-        start_date_time = timezone.make_aware(
-            datetime(start_date[2], start_date[0], start_date[1], start_hour, start_minute))
-
-        end_date = [i for i in map(int, self.request.data.get('end_date').split('/'))]
-        str_end_time, check_morning = self.request.data.get('end_time').split(' ')
-        end_hour, end_minute = map(int, (str_end_time.split(':')))
-
-        if check_morning == 'PM':
-            end_hour += 12
-
-        end_date_time = timezone.make_aware(
-            datetime(end_date[2], end_date[0], end_date[1], end_hour, end_minute))
-
+        start_date_time = self.make_date_time_obj('start')
+        end_date_time = self.make_date_time_obj('end')
         is_all_day = True if self.request.data.get('is_all_day') == 'checked' else False
         monthly_repeat = True if self.request.data.get('monthly_repeat') == 'checked' else False
 
@@ -54,6 +36,18 @@ class CreateScheduleView(APIView):
                                                end_date_time=end_date_time, is_all_day=is_all_day,
                                                is_repeated=monthly_repeat)
         return Response({})
+
+    def make_date_time_obj(self, status):
+
+        date = [i for i in map(int, self.request.data.get(f'{status}_date').split('/'))]
+        str_time, check_morning = self.request.data.get(f'{status}_time').split(' ')
+        hour, minute = map(int, (str_time.split(':')))
+        if check_morning == 'PM':
+            hour += 12
+
+        datetime_obj = timezone.make_aware(datetime(date[2], date[0], date[1], hour, minute))
+
+        return datetime_obj
 
 
 class MakeMonthly(View):
