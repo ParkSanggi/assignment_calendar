@@ -31,7 +31,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
             cur_month = 13
             cur_year -= 1
 
-        if start_month < cur_month and start_day < week_list[0][0][1] :
+        if start_month < cur_month and start_day < week_list[0][0][1]:
             schedule_length = (instance.end_date_time - timezone.make_aware(
                 datetime(cur_year, week_list[0][0][0], week_list[0][0][1]))).days + 1
 
@@ -76,7 +76,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
                  <div class="event-consecutive-marking"></div><div class="title">
                  <h5>{instance.title}</h5><h7 class="reservation">{start_year}년 {start_month}월 {start_day}일 – 
                 {end_month}월 {end_day}일</h7></div><div class="content-line"><i class="material-icons">notes</i>
-                <div class="title"><h7 class="reservation">{instance.description}</div></div>'>{instance.title}</div>""")
+                <div class="title"><h7 class="reservation">{instance.description}</h7></div></div>'>{instance.title}</div>""")
 
                 temp_schedule_length -= remaining_spaces
 
@@ -100,7 +100,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
              <div class="event-consecutive-marking"></div><div class="title">
              <h5>{instance.title}</h5><h7 class="reservation">{start_year}년 {start_month}월 {start_day}일 – 
             {end_month}월 {end_day}일</h7></div><div class="content-line"><i class="material-icons">notes</i>
-            <div class="title"><h7 class="reservation">{instance.description}</div></div>'>{instance.title}</div>""")
+            <div class="title"><h7 class="reservation">{instance.description}</h7></div></div>'>{instance.title}</div>""")
                 break
 
         return serializers_data
