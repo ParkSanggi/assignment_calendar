@@ -5,7 +5,7 @@
 
 <div class="calendar-container">
     <div class="calendar-header">
-        <button class="btn btn-light">Today</button>
+        <button class="btn btn-light" onclick="location.href='/'">Today</button>
         <div class="ico-arrow">
             <a href="{% url 'schedule:monthly' today|convert_pre_year today|convert_pre_month today.2 %}"
                data-toggle="tooltip" data-placement="top" title="이전">
