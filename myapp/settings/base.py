@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'myapp.home',
     'myapp.user',
     'schedule',
-    'django_extensions',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
