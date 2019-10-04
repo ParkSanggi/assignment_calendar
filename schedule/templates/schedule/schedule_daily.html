@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load schedule_extras %}
 
 {% block content %}
 
@@ -7,13 +6,13 @@
     <div class="calendar-header">
         <button class="btn btn-light">Today</button>
         <div class="ico-arrow">
-            <a href="{% url 'schedule:monthly' today|convert_pre_year today|convert_pre_month today.2 %}"
+            <a href="#"
                data-toggle="tooltip" data-placement="top" title="이전">
                 <i class="material-icons">
                     chevron_left
                 </i>
             </a>
-            <a href="{% url 'schedule:monthly' today|convert_next_year today|convert_next_month today.2 %}"
+            <a href="#"
                data-toggle="tooltip" data-placement="top" title="다음">
                 <i class="material-icons">
                     chevron_right
@@ -34,22 +33,11 @@
         </ul>
     </div>
     <div class="tab-content">
-        <div class="tab-pane active show" id="month" role="tabpanel" aria-labelledby="tab-month">
-            <div class="monthly-calendar">
-                {% for week in week_list %}
-                <div class="week">
-                    {% for day in week %}
-                    <div class="day">
-                        <h3 class="day-label">{{ day.1 }}</h3>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endfor %}
-
+        <div class="tab-pane active show" id="day" role="tabpanel" aria-labelledby="tab-day">
+            <div class="daily-calendar">
+            <span class="day-name">3일 화요일</span>
             </div>
         </div>
-        <!--            여기까지가 캘린더-->
     </div>
 </div>
-
 {% endblock %}
