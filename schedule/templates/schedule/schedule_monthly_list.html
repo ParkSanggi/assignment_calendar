@@ -175,8 +175,6 @@ month = {{ today.1 }}
 
 $(function(){
 
-    console.log(schedules);
-
     schedules.forEach(function (schedule){
 
         for(i in schedule['schedule_bars']){
@@ -198,19 +196,8 @@ $(function(){
 
 
     $('button.submit').click(function(){
-        alert('123');
-        url = $('form').attr('action');
 
-        console.log({
-        schedule_name: $('#recipient-name').val(),
-                    schedule_description: $('#message-text').val(),
-                    start_date: $('#datetimepicker1').children('input').val(),
-                    start_time: $('#datetimepicker2').children('input').val(),
-                    end_date: $('#datetimepicker3').children('input').val(),
-                    end_time: $('#datetimepicker4').children('input').val(),
-                    monthly_repeat: $('#inlineCheckbox1').val(),
-                    is_all_day: $('#inlineCheckbox2').val(),
-        });
+        url = $('form').attr('action');
 
         $.ajax({
             url: url,
