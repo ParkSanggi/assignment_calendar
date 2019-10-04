@@ -10,12 +10,16 @@
         $('[data-toggle="popover"]').popover().on('inserted.bs.popover')
     });
 
-    $('.week, .daily-calendar').click(function() {
-        $('#registerSchedule').modal('show');
-    });
+//    $('.week, .daily-calendar').click(function() {
+//        $('#registerSchedule').modal('show');
+//    });
 
     $(".event-consecutive, .event, .event-repeated").click(function(event) {
         event.stopPropagation();
+    });
+
+    $('.day-label').click(function(){
+        $('#registerSchedule').modal('show');
     });
 
     $(function () {
@@ -35,4 +39,3 @@
             format: 'LT'
         });
     });
-
