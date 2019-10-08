@@ -4,8 +4,20 @@
 
 <div class="calendar-container">
     <div class="calendar-header">
+                        <div class="input-group date" id="datetimepicker1" data-target-input="nearest" >
+                    <input type="hidden" class="datetimepicker-input"
+                                           data-target="#datetimepicker1"/>
+                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                        <div class="input-group-text">
+                            <i class="material-icons">
+                            calendar_today
+                            </i>
+                        </div>
+                    </div>
+                </div>
         <button class="btn btn-light">Today</button>
         <div class="ico-arrow">
+
             <a href="#"
                data-toggle="tooltip" data-placement="top" title="이전">
                 <i class="material-icons">
@@ -18,8 +30,10 @@
                     chevron_right
                 </i>
             </a>
+
         </div>
         <h4>{{ today.0 }}년 {{ today.1 }}월</h4>
+
         <ul class="nav nav-tabs view-tab" id="view" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="tab-month" data-toggle="tab" href="#month" role="tab"
@@ -27,17 +41,17 @@
                    aria-selected="true">월</a>
             </li>
             <li class="nav-item">
-                <form action="/" method="get">
-                    <input type="text">
-                </form>
-
+                <a class="nav-link" id="tab-day" data-toggle="tab" href="#day" role="tab" aria-controls="day"
+                   aria-selected="false">일</a>
             </li>
+
         </ul>
     </div>
     <div class="tab-content">
         <div class="tab-pane active show" id="day" role="tabpanel" aria-labelledby="tab-day">
             <div class="daily-calendar">
             <span class="day-name">3일 화요일</span>
+
             </div>
         </div>
     </div>
@@ -45,10 +59,12 @@
 
 <script type="text/javascript">
 $(function(){
-alert('');
+
 schedules = {{ schedules|safe }}
-alert('');
+
 console.log(schedules);
+
+    $('.input-group').css({ "width" : "50"});
 
 
     schedules.forEach(function (schedule){
@@ -60,7 +76,6 @@ console.log(schedules);
 
         };
     });
-
 });
 </script>
 {% endblock %}
