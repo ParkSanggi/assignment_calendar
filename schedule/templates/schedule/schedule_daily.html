@@ -4,18 +4,18 @@
 
 <div class="calendar-container">
     <div class="calendar-header">
-                        <div class="input-group date" id="datetimepicker1" data-target-input="nearest" >
-                    <input type="hidden" class="datetimepicker-input"
-                                           data-target="#datetimepicker1"/>
-                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                        <div class="input-group-text">
-                            <i class="material-icons">
-                            calendar_today
-                            </i>
-                        </div>
-                    </div>
+        <div class="input-group date" id="datetimepicker1" data-target-input="nearest" >
+            <input type="hidden" class="datetimepicker-input"
+                                   data-target="#datetimepicker1"/>
+            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                <div class="input-group-text">
+                    <i class="material-icons">
+                    calendar_today
+                    </i>
                 </div>
-        <button class="btn btn-light">Today</button>
+            </div>
+        </div>
+        <button class="btn btn-light move">이동</button>
         <div class="ico-arrow">
 
             <a href="#"
@@ -32,7 +32,7 @@
             </a>
 
         </div>
-        <h4>{{ today.0 }}년 {{ today.1 }}월</h4>
+        <h4>{{ today.year }}년 {{ today.month }}월</h4>
 
         <ul class="nav nav-tabs view-tab" id="view" role="tablist">
             <li class="nav-item">
@@ -50,7 +50,7 @@
     <div class="tab-content">
         <div class="tab-pane active show" id="day" role="tabpanel" aria-labelledby="tab-day">
             <div class="daily-calendar">
-            <span class="day-name">3일 화요일</span>
+            <span class="day-name">{{ today.day }}일 {{ today.day_of_week }}요일</span>
 
             </div>
         </div>
@@ -61,10 +61,18 @@
 $(function(){
 
 schedules = {{ schedules|safe }}
+url = "{% url 'schedule:daily_basic' %}"
 
 console.log(schedules);
 
     $('.input-group').css({ "width" : "50"});
+
+    $('.move').on('click', function(){
+
+        var path = url + $('.datetimepicker-input').val()
+        $(location).attr('href', path)
+
+    });
 
 
     schedules.forEach(function (schedule){

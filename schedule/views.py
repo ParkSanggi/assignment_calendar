@@ -14,22 +14,28 @@ from .models import Schedule
 
 
 class MakeDailyListView(View):
-    def get(self, *args, **kwargs):
+    def get(self, *args, month=datetime.today().month, day=datetime.today().day, year=datetime.today().year):
 
-        today_year = datetime.today().year
-        today_month = datetime.today().month
-        today_day = datetime.today().day
+        today_midnight = timezone.make_aware(datetime(year, month, day, 23, 59, 59))
+        week = ['월', '화', '수', '목', '금', '토', '일']
+        day_of_week = week[today_midnight.weekday()]
 
-        today_midnight = timezone.make_aware(datetime(today_year, today_month, today_day, 23, 59, 59))
-
-        if today_day == 1 and today_month == 1:
-            yester_day_midnight = timezone.make_aware(datetime(today_year-1, 12, 31, 23, 59, 59))
+        if day == 1 and month == 1:
+            yesterday_midnight = timezone.make_aware(datetime(year - 1, 12, 31, 23, 59, 59))
         else:
-            yester_day_midnight = timezone.make_aware(datetime(today_year, today_month, today_day, 23, 59, 59))
+            yesterday_midnight = timezone.make_aware(datetime(year, month, day, 23, 59, 59))
 
-        queryset = Schedule.objects.filter(end_date_time__gt=yester_day_midnight, start_date_time__lt=today_midnight)
+        queryset = Schedule.objects.filter(end_date_time__gt=yesterday_midnight, start_date_time__lt=today_midnight)
         schedules = json.dumps(DailyScheduleSerializer(queryset, many=True).data)
-        context = {'schedules': schedules}
+        context = {
+                    'schedules': schedules,
+                    'today': {
+                                'year': year,
+                                'month': month,
+                                'day': day,
+                                'day_of_week': day_of_week,
+                    },
+                   }
         return render(self.request, 'schedule/schedule_daily.html', context)
 
 
@@ -129,4 +135,5 @@ class MakeMonthly(View):
                 weeks[0][temp_idx] = [last_month, temp_day]
                 temp_idx -= 1
                 temp_day -= 1
+
         return weeks
